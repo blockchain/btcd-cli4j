@@ -3,10 +3,9 @@ package com.neemre.btcdcli4j.core.domain.enums;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.neemre.btcdcli4j.core.common.Errors;
-
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 
@@ -24,6 +23,7 @@ public enum ScriptTypes {
 	NULL_DATA("nulldata"),
 	WITNESS_V0_KEYHASH("witness_v0_keyhash"),
 	WITNESS_V0_SCRIPTHASH("witness_v0_scripthash"),
+	WITNESS_UNKNOWN("witness_unknown"),
 	NONSTANDARD("nonstandard");
 	
 	private final String name;
