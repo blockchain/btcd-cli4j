@@ -57,6 +57,8 @@ public enum Errors {
 	IO_SOCKET_UNINITIALIZED(1004002, "Unable to open the specified socket."),
 	IO_SERVERSOCKET_UNINITIALIZED(1004003, "Unable to open the specified server socket."),
 	IO_UNKNOWN(1004004, "The operation failed due to an unknown IO exception."),
+	IO_COMMUNICATION(1004005, "The operation failed due to an communication exception."),
+	IO_BITCOIND(1004006, "The operation failed due to an bitcoind exception."),
 	PARSE_URI_FAILED(1005001, "Unable to parse the specified URI."),
 	PARSE_JSON_UNKNOWN(1005002, "An unknown exception occurred while parsing/generating JSON content."),
 	PARSE_JSON_MALFORMED(1005003, "Unable to parse the specified JSON content (malformed syntax detected)."),
