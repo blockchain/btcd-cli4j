@@ -4,6 +4,8 @@ target/
 .settings/
 .classpath
 .project
+.idea
+*.iml
 
 # Project-specific patterns
 logs/
