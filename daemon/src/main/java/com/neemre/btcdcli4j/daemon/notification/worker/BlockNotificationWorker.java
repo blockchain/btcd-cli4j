@@ -11,27 +11,32 @@ import java.net.Socket;
 
 public class BlockNotificationWorker extends NotificationWorker {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BlockNotificationWorker.class);
-	
-	
-	public BlockNotificationWorker(Socket socket, BtcdClient client) {
-		super(socket, client);
-	}
+    private static final Logger LOG = LoggerFactory.getLogger(BlockNotificationWorker.class);
 
-	@Override
-	protected Object getRelatedEntity(String headerHash) {
-		RawBlock rawBlock = new RawBlock();
-		rawBlock.setHash(headerHash);
-		if (getClient() != null) {
-			try {
-				LOG.debug("-- getRelatedEntity(..): fetching related block data from 'bitcoind' "
-						+ "(via JSON-RPC API)");
-				rawBlock = getClient().getBlock(headerHash, 2);
-			} catch (BitcoindException | CommunicationException e) {
-				LOG.error("<< getRelatedEntity(..): failed to receive block data from 'bitcoind' "
-						+ "(hash: '{}'), message was: '{}'", headerHash, e.getMessage());
-			}
-		}
-		return rawBlock;
-	}
+
+    public BlockNotificationWorker(Socket socket, BtcdClient client) {
+        super(socket, client);
+    }
+
+    @Override
+    protected Object getRelatedEntity(String headerHash) throws CommunicationException, BitcoindException {
+        RawBlock rawBlock = new RawBlock();
+        rawBlock.setHash(headerHash);
+        if (getClient() != null) {
+            try {
+                LOG.debug("-- getRelatedEntity(..): fetching related block data from 'bitcoind' "
+                        + "(via JSON-RPC API)");
+                rawBlock = getClient().getBlock(headerHash, 2);
+            } catch (CommunicationException e) {
+                LOG.error("<< getRelatedEntity(..): failed to receive block data from 'bitcoind' "
+                        + "(hash: '{}'), message was: '{}'", headerHash, e.getMessage());
+                throw e;
+            } catch (BitcoindException e) {
+                LOG.error("<< getRelatedEntity(..): failed to receive block data from 'bitcoind' "
+                        + "(hash: '{}'), message was: '{}'", headerHash, e.getMessage());
+                throw e;
+            }
+        }
+        return rawBlock;
+    }
 }
