@@ -166,11 +166,17 @@ public class BtcdDaemonImpl implements BtcdDaemon {
 
     private void buildMonitors(Properties nodeConfig) {
         int alertPort = Integer.parseInt(nodeConfig.getProperty(NodeProperties.ALERT_PORT.getKey()));
-        monitors.put(Notifications.ALERT, new NotificationMonitor(Notifications.ALERT, alertPort, null));
+        NotificationMonitor alertNotificationMonitor = new NotificationMonitor(Notifications.ALERT, alertPort, null);
+        monitors.put(Notifications.ALERT, alertNotificationMonitor);
+       
         int blockPort = Integer.parseInt(nodeConfig.getProperty(NodeProperties.BLOCK_PORT.getKey()));
-        monitors.put(Notifications.BLOCK, new NotificationMonitor(Notifications.BLOCK, blockPort, client));
+        NotificationMonitor blockNotificationMonitor = new NotificationMonitor(Notifications.BLOCK, blockPort, client);
+        monitors.put(Notifications.BLOCK, blockNotificationMonitor);
+       
         int walletPort = Integer.parseInt(nodeConfig.getProperty(NodeProperties.WALLET_PORT.getKey()));
-        monitors.put(Notifications.WALLET, new NotificationMonitor(Notifications.WALLET, walletPort, client));
+        NotificationMonitor walletNotificationMonitor = new NotificationMonitor(Notifications.WALLET, walletPort, client);
+        monitors.put(Notifications.WALLET, walletNotificationMonitor);
+        
         monitorPool = Executors.newFixedThreadPool(monitors.size());
     }
 
