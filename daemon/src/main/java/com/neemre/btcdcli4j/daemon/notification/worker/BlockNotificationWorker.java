@@ -28,11 +28,11 @@ public class BlockNotificationWorker extends NotificationWorker {
                         + "(via JSON-RPC API)");
                 rawBlock = getClient().getBlock(headerHash, 2);
             } catch (CommunicationException e) {
-                LOG.error("<< getRelatedEntity(..): failed to receive block data from 'bitcoind' "
+                LOG.error("<< getRelatedEntity(..) / CommunicationException: failed to receive block data from 'bitcoind' "
                         + "(hash: '{}'), message was: '{}'", headerHash, e.getMessage());
                 throw e;
             } catch (BitcoindException e) {
-                LOG.error("<< getRelatedEntity(..): failed to receive block data from 'bitcoind' "
+                LOG.error("<< getRelatedEntity(..) / BitcoindException: failed to receive block data from 'bitcoind' "
                         + "(hash: '{}'), message was: '{}'", headerHash, e.getMessage());
                 throw e;
             }
