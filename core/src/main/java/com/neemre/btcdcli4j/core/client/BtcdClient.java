@@ -71,7 +71,7 @@ public interface BtcdClient {
 
 
     /**
-     * @param headerHash Hash of block   
+     * @param headerHash Hash of block
      * @param verbosity  If verbosity is 0, returns a string that is serialized, hex-encoded data for block 'hash'.
      *                   If verbosity is 1, returns an Object with information about block hash.
      *                   If verbosity is 2, returns an Object with information about block hash and information about each transaction.

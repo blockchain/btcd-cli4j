@@ -1,14 +1,9 @@
 package com.neemre.btcdcli4j.core.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -19,6 +14,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MultiSigAddress extends Entity {
 
-	private String address;
-	private String redeemScript;
+    private String address;
+    private String redeemScript;
 }

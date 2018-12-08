@@ -15,34 +15,34 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public enum ScriptTypes {
 
-	// https://github.com/bitcoin/bitcoin/blob/8152d3fe57a991e9088d0b9d261d2b10936f45a9/src/script/standard.cpp
-	PUB_KEY("pubkey"),
-	PUB_KEY_HASH("pubkeyhash"),
-	SCRIPT_HASH("scripthash"),
-	MULTISIG("multisig"),
-	NULL_DATA("nulldata"),
-	WITNESS_V0_KEYHASH("witness_v0_keyhash"),
-	WITNESS_V0_SCRIPTHASH("witness_v0_scripthash"),
-	WITNESS_UNKNOWN("witness_unknown"),
-	NONSTANDARD("nonstandard");
-	
-	private final String name;
+    // https://github.com/bitcoin/bitcoin/blob/8152d3fe57a991e9088d0b9d261d2b10936f45a9/src/script/standard.cpp
+    PUB_KEY("pubkey"),
+    PUB_KEY_HASH("pubkeyhash"),
+    SCRIPT_HASH("scripthash"),
+    MULTISIG("multisig"),
+    NULL_DATA("nulldata"),
+    WITNESS_V0_KEYHASH("witness_v0_keyhash"),
+    WITNESS_V0_SCRIPTHASH("witness_v0_scripthash"),
+    WITNESS_UNKNOWN("witness_unknown"),
+    NONSTANDARD("nonstandard");
 
-	
-	@JsonValue
-	public String getName() {
-		return name;
-	}	
+    private final String name;
 
-	@JsonCreator
-	public static ScriptTypes forName(String name) {
-		if (name != null) {
-			for (ScriptTypes scriptType : ScriptTypes.values()) {
-				if (name.equals(scriptType.getName())) {
-					return scriptType;
-				}
-			}
-		}
-		throw new IllegalArgumentException(Errors.ARGS_BTCD_SCRIPTTYPE_UNSUPPORTED.getDescription());
-	}
+
+    @JsonValue
+    public String getName() {
+        return name;
+    }
+
+    @JsonCreator
+    public static ScriptTypes forName(String name) {
+        if (name != null) {
+            for (ScriptTypes scriptType : ScriptTypes.values()) {
+                if (name.equals(scriptType.getName())) {
+                    return scriptType;
+                }
+            }
+        }
+        throw new IllegalArgumentException(Errors.ARGS_BTCD_SCRIPTTYPE_UNSUPPORTED.getDescription());
+    }
 }
