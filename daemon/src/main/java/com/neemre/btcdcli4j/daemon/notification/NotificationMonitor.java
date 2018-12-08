@@ -97,7 +97,7 @@ public class NotificationMonitor extends Observable implements Observer, Callabl
                 throw new NotificationHandlerException(Errors.IO_SOCKET_UNINITIALIZED, e);
             } catch (Throwable e) {
                 Thread.currentThread().interrupt();
-                throw new NotificationHandlerException(Errors.IO_SOCKET_UNINITIALIZED);
+                throw new NotificationHandlerException(Errors.IO_SOCKET_UNINITIALIZED, e);
             } finally {
                 if (Thread.interrupted()) {
                     deactivate();

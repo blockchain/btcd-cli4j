@@ -64,7 +64,7 @@ public abstract class NotificationWorker extends Observable implements Callable<
             throw new NotificationHandlerException(Errors.IO_UNKNOWN, e);
         } catch (Throwable e) {
             LOG.error("Throwable at NotificationWorker: e={}, notification={}", e.toString(), notification);
-            throw new NotificationHandlerException(Errors.IO_UNKNOWN);
+            throw new NotificationHandlerException(Errors.IO_UNKNOWN, e);
         } finally {
             if (socket != null) {
                 try {

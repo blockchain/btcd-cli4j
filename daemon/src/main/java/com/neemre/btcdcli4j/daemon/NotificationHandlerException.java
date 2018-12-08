@@ -30,7 +30,7 @@ public class NotificationHandlerException extends Exception {
         code = error.getCode();
     }
 
-    public NotificationHandlerException(Errors error, Exception cause) {
+    public NotificationHandlerException(Errors error, Throwable cause) {
         super(error.getDescription(), cause);
         code = error.getCode();
     }
