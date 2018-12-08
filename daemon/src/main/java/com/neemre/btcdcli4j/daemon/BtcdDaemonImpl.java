@@ -160,8 +160,8 @@ public class BtcdDaemonImpl implements BtcdDaemon {
     private void initialize() {
         LOG.info(">> initialize(..): initiating the 'bitcoind' notification daemon");
         configurator = new DaemonConfigurator();
-        monitors = new HashMap<Notifications, NotificationMonitor>();
-        futures = new HashMap<Notifications, Future<Void>>();
+        monitors = new HashMap<>();
+        futures = new HashMap<>();
     }
 
     private void buildMonitors(Properties nodeConfig) {
