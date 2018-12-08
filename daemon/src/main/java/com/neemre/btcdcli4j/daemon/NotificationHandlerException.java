@@ -14,7 +14,7 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-public class NotificationHandlerException extends RuntimeException {
+public class NotificationHandlerException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
