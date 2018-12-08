@@ -17,9 +17,8 @@ import lombok.ToString;
 public class NotificationHandlerException extends Exception {
 
     private static final long serialVersionUID = 1L;
-
+    private final Errors error;
     private int code;
-
 
     public NotificationHandlerException(Errors error) {
         this(error, Constants.STRING_EMPTY);
@@ -27,11 +26,13 @@ public class NotificationHandlerException extends Exception {
 
     public NotificationHandlerException(Errors error, String additionalMsg) {
         super(error.getDescription() + additionalMsg);
+        this.error = error;
         code = error.getCode();
     }
 
     public NotificationHandlerException(Errors error, Throwable cause) {
         super(error.getDescription(), cause);
+        this.error = error;
         code = error.getCode();
     }
 }
