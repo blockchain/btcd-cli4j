@@ -55,8 +55,7 @@ public class NotificationMonitor extends Observable implements Observer, Runnabl
         while (isActive) {
             try {
                 Socket socket = serverSocket.accept();
-                NotificationWorker worker = NotificationWorkerFactory.createWorker(type, socket,
-                        client);
+                NotificationWorker worker = NotificationWorkerFactory.createWorker(type, socket, client);
                 worker.addObserver(this);
                 workerPool.submit(worker);
                 LOG.trace("-- run(..): total no. of '{}' notifications received: '{}', task queue "
