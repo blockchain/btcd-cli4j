@@ -17,8 +17,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Observable;
+import java.util.concurrent.Callable;
 
-public abstract class NotificationWorker extends Observable implements Runnable {
+public abstract class NotificationWorker extends Observable implements Callable<Void> {
 
     private static final Logger LOG = LoggerFactory.getLogger(NotificationWorker.class);
 
@@ -35,7 +36,8 @@ public abstract class NotificationWorker extends Observable implements Runnable 
     }
 
     @Override
-    public void run() {
+    public Void call() throws NotificationHandlerException {
+        String notification = "null";
         try {
             Thread.currentThread().setName(getUniqueName());
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(),
@@ -44,10 +46,10 @@ public abstract class NotificationWorker extends Observable implements Runnable 
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 notificationBuilder.append(line);
             }
-            String notification = notificationBuilder.toString().trim();
+            notification = notificationBuilder.toString().trim();
             LOG.debug("-- run(..): received new '{}' notification as (raw): '{}'", getType().name(),
                     notification);
-            Object relatedEntity = null;
+            Object relatedEntity;
             try {
                 relatedEntity = getRelatedEntity(notification);
                 setChanged();
@@ -58,6 +60,10 @@ public abstract class NotificationWorker extends Observable implements Runnable 
                 throw new NotificationHandlerException(Errors.IO_BITCOIND, e);
             }
         } catch (IOException e) {
+            LOG.error("IOException at NotificationWorker: e={}, notification={}", e.toString(), notification);
+            throw new NotificationHandlerException(Errors.IO_UNKNOWN, e);
+        } catch (Throwable e) {
+            LOG.error("Throwable at NotificationWorker: e={}, notification={}", e.toString(), notification);
             throw new NotificationHandlerException(Errors.IO_UNKNOWN, e);
         } finally {
             if (socket != null) {
@@ -71,6 +77,7 @@ public abstract class NotificationWorker extends Observable implements Runnable 
                 }
             }
         }
+        return null;
     }
 
     protected abstract Object getRelatedEntity(String notification) throws CommunicationException, BitcoindException;

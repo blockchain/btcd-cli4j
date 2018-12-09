@@ -1,5 +1,6 @@
 package com.neemre.btcdcli4j.daemon;
 
+import com.google.common.util.concurrent.*;
 import com.neemre.btcdcli4j.core.BitcoindException;
 import com.neemre.btcdcli4j.core.CommunicationException;
 import com.neemre.btcdcli4j.core.NodeProperties;
@@ -11,12 +12,13 @@ import com.neemre.btcdcli4j.daemon.notification.NotificationMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 
 public class BtcdDaemonImpl implements BtcdDaemon {
 
@@ -25,9 +27,12 @@ public class BtcdDaemonImpl implements BtcdDaemon {
     private DaemonConfigurator configurator;
     private Map<Notifications, NotificationMonitor> monitors;
     private Map<Notifications, Future<Void>> futures;
-    private ExecutorService monitorPool;
+    private ListeningExecutorService monitorPool;
 
     private BtcdClient client;
+
+    @Nullable
+    private Consumer<Throwable> errorHandler;
 
 
     public BtcdDaemonImpl() {
@@ -35,6 +40,12 @@ public class BtcdDaemonImpl implements BtcdDaemon {
     }
 
     public BtcdDaemonImpl(BtcdClient btcdProvider) throws BitcoindException, CommunicationException {
+        this(btcdProvider, null);
+    }
+
+    public BtcdDaemonImpl(BtcdClient btcdProvider, @Nullable Consumer<Throwable> errorHandler)
+            throws BitcoindException, CommunicationException {
+        this.errorHandler = errorHandler;
         initialize();
         this.client = configurator.checkBtcdProvider(btcdProvider);
         buildMonitors(configurator.checkNodeConfig(client.getNodeConfig()));
@@ -166,24 +177,48 @@ public class BtcdDaemonImpl implements BtcdDaemon {
 
     private void buildMonitors(Properties nodeConfig) {
         int alertPort = Integer.parseInt(nodeConfig.getProperty(NodeProperties.ALERT_PORT.getKey()));
-        NotificationMonitor alertNotificationMonitor = new NotificationMonitor(Notifications.ALERT, alertPort, null);
+        NotificationMonitor alertNotificationMonitor = new NotificationMonitor(Notifications.ALERT, alertPort, null,
+                throwable -> {
+                    if (errorHandler != null)
+                        errorHandler.accept(throwable);
+                });
         monitors.put(Notifications.ALERT, alertNotificationMonitor);
-       
+
         int blockPort = Integer.parseInt(nodeConfig.getProperty(NodeProperties.BLOCK_PORT.getKey()));
-        NotificationMonitor blockNotificationMonitor = new NotificationMonitor(Notifications.BLOCK, blockPort, client);
+        NotificationMonitor blockNotificationMonitor = new NotificationMonitor(Notifications.BLOCK, blockPort, client,
+                throwable -> {
+                    if (errorHandler != null)
+                        errorHandler.accept(throwable);
+                });
         monitors.put(Notifications.BLOCK, blockNotificationMonitor);
-       
+
         int walletPort = Integer.parseInt(nodeConfig.getProperty(NodeProperties.WALLET_PORT.getKey()));
-        NotificationMonitor walletNotificationMonitor = new NotificationMonitor(Notifications.WALLET, walletPort, client);
+        NotificationMonitor walletNotificationMonitor = new NotificationMonitor(Notifications.WALLET, walletPort, client,
+                throwable -> {
+                    if (errorHandler != null)
+                        errorHandler.accept(throwable);
+                });
         monitors.put(Notifications.WALLET, walletNotificationMonitor);
-        
-        monitorPool = Executors.newFixedThreadPool(monitors.size());
+
+        monitorPool = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(monitors.size()));
     }
 
     private void startMonitors() {
         for (Notifications notificationType : monitors.keySet()) {
             NotificationMonitor monitor = monitors.get(notificationType);
-            futures.put(notificationType, monitorPool.submit(monitor, (Void) null));
+
+            ListenableFuture<Void> future = monitorPool.submit(monitor);
+            futures.put(notificationType, future);
+
+            Futures.addCallback(future, new FutureCallback<Void>() {
+                public void onSuccess(Void ignore) {
+                }
+
+                public void onFailure(Throwable throwable) {
+                    if (errorHandler != null)
+                        errorHandler.accept(throwable);
+                }
+            });
         }
     }
 }

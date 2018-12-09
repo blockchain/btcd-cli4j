@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>network.bisq.btcd-cli4j</groupId>
 		<artifactId>btcd-cli4j-parent</artifactId>
-		<version>0.5.8.3</version>
+		<version>0.5.8.4</version>
 	</parent>
 	<artifactId>btcd-cli4j-daemon</artifactId>
 	<packaging>jar</packaging>
@@ -24,6 +24,16 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>3.0.2</version>
 		</dependency>
 	</dependencies>
 </project>
