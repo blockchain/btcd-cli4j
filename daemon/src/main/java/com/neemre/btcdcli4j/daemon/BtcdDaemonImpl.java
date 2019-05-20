@@ -20,6 +20,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
+import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
+
 public class BtcdDaemonImpl implements BtcdDaemon {
 
     private static final Logger LOG = LoggerFactory.getLogger(BtcdDaemonImpl.class);
@@ -218,7 +220,7 @@ public class BtcdDaemonImpl implements BtcdDaemon {
                     if (errorHandler != null)
                         errorHandler.accept(throwable);
                 }
-            });
+            }, directExecutor());
         }
     }
 }

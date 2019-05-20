@@ -25,6 +25,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
+
 public class NotificationMonitor extends Observable implements Observer, Callable<Void> {
 
     private static final Logger LOG = LoggerFactory.getLogger(NotificationMonitor.class);
@@ -83,7 +85,7 @@ public class NotificationMonitor extends Observable implements Observer, Callabl
                         if (errorHandler != null)
                             errorHandler.accept(throwable);
                     }
-                });
+                }, directExecutor());
 
                 LOG.trace("-- run(..): total no. of '{}' notifications received: '{}', task queue "
                                 + "occupancy: '{}/{}'", type.name(), executor.getTaskCount(),
