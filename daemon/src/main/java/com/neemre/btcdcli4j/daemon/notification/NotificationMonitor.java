@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -126,11 +127,11 @@ public class NotificationMonitor extends Observable implements Observer, Callabl
         Thread.currentThread().setName(getUniqueName());
         isActive = true;
         try {
-            serverSocket = new ServerSocket(serverPort);
+            serverSocket = new ServerSocket(serverPort, 5, InetAddress.getLoopbackAddress());
             serverSocket.setSoTimeout(IDLE_SOCKET_TIMEOUT);
         } catch (IOException e) {
             try {
-                serverSocket = new ServerSocket(0);
+                serverSocket = new ServerSocket(0, 5, InetAddress.getLoopbackAddress());
                 serverSocket.setSoTimeout(IDLE_SOCKET_TIMEOUT);
                 LOG.warn("-- activate(..): failed to create server socket (monitor: '{}', port: "
                                 + "'{}'), reverting to unused port '{}'", type.name(), serverPort,
