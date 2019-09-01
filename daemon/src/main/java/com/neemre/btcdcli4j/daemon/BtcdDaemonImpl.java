@@ -178,8 +178,10 @@ public class BtcdDaemonImpl implements BtcdDaemon {
     }
 
     private void buildMonitors(Properties nodeConfig) {
+        String allowedHost = nodeConfig.getProperty(NodeProperties.ALLOWED_HOST.getKey());
         int alertPort = Integer.parseInt(nodeConfig.getProperty(NodeProperties.ALERT_PORT.getKey()));
-        NotificationMonitor alertNotificationMonitor = new NotificationMonitor(Notifications.ALERT, alertPort, null,
+        NotificationMonitor alertNotificationMonitor = new NotificationMonitor(Notifications.ALERT, alertPort,
+                allowedHost, null,
                 throwable -> {
                     if (errorHandler != null)
                         errorHandler.accept(throwable);
@@ -187,7 +189,8 @@ public class BtcdDaemonImpl implements BtcdDaemon {
         monitors.put(Notifications.ALERT, alertNotificationMonitor);
 
         int blockPort = Integer.parseInt(nodeConfig.getProperty(NodeProperties.BLOCK_PORT.getKey()));
-        NotificationMonitor blockNotificationMonitor = new NotificationMonitor(Notifications.BLOCK, blockPort, client,
+        NotificationMonitor blockNotificationMonitor = new NotificationMonitor(Notifications.BLOCK, blockPort,
+                allowedHost, client,
                 throwable -> {
                     if (errorHandler != null)
                         errorHandler.accept(throwable);
@@ -195,7 +198,8 @@ public class BtcdDaemonImpl implements BtcdDaemon {
         monitors.put(Notifications.BLOCK, blockNotificationMonitor);
 
         int walletPort = Integer.parseInt(nodeConfig.getProperty(NodeProperties.WALLET_PORT.getKey()));
-        NotificationMonitor walletNotificationMonitor = new NotificationMonitor(Notifications.WALLET, walletPort, client,
+        NotificationMonitor walletNotificationMonitor = new NotificationMonitor(Notifications.WALLET, walletPort,
+                allowedHost, client,
                 throwable -> {
                     if (errorHandler != null)
                         errorHandler.accept(throwable);
