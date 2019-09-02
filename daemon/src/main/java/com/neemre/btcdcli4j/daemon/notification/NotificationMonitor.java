@@ -39,6 +39,7 @@ public class NotificationMonitor extends Observable implements Observer, Callabl
 
     private Notifications type;
     private int serverPort;
+    private String allowedHost;
     private ServerSocket serverSocket;
     private volatile boolean isActive;
 
@@ -51,10 +52,10 @@ public class NotificationMonitor extends Observable implements Observer, Callabl
     private ListeningExecutorService workerPool;
 
     public NotificationMonitor(Notifications type, int serverPort, @Nullable BtcdClient client) {
-        this(type, serverPort, client, null);
+        this(type, serverPort, "", client, null);
     }
 
-    public NotificationMonitor(Notifications type, int serverPort, @Nullable BtcdClient client,
+    public NotificationMonitor(Notifications type, int serverPort, String allowedHost, @Nullable BtcdClient client,
                                @Nullable Consumer<Throwable> errorHandler) {
         LOG.info("** NotificationMonitor(): launching new '{}' notification monitor (port: '{}', "
                 + "RPC-capable: '{}')", type.name(), serverPort, ((client == null) ? "no" : "yes"));
@@ -62,6 +63,7 @@ public class NotificationMonitor extends Observable implements Observer, Callabl
         this.type = type;
         this.serverPort = serverPort;
         this.client = client;
+        this.allowedHost = allowedHost;
     }
 
     @Override
@@ -125,13 +127,15 @@ public class NotificationMonitor extends Observable implements Observer, Callabl
 
     private void activate() throws NotificationHandlerException {
         Thread.currentThread().setName(getUniqueName());
+        InetAddress host = InetAddress.getLoopbackAddress();
         isActive = true;
         try {
-            serverSocket = new ServerSocket(serverPort, 5, InetAddress.getLoopbackAddress());
+            host = allowedHost.isEmpty() ? host : InetAddress.getByName(allowedHost);
+            serverSocket = new ServerSocket(serverPort, 5, host);
             serverSocket.setSoTimeout(IDLE_SOCKET_TIMEOUT);
         } catch (IOException e) {
             try {
-                serverSocket = new ServerSocket(0, 5, InetAddress.getLoopbackAddress());
+                serverSocket = new ServerSocket(0, 5, host);
                 serverSocket.setSoTimeout(IDLE_SOCKET_TIMEOUT);
                 LOG.warn("-- activate(..): failed to create server socket (monitor: '{}', port: "
                                 + "'{}'), reverting to unused port '{}'", type.name(), serverPort,
