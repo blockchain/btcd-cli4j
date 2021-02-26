@@ -322,6 +322,11 @@ public interface BtcdClient {
     void generate(Integer nBlocks, Integer maxTries) throws BitcoindException,
             CommunicationException;
 
+    void generateToAddress(Integer nBlocks, String toAddress) throws BitcoindException, CommunicationException;
+
+    void generateToAddress(Integer nBlocks, String toAddress, Integer maxTries) throws BitcoindException,
+            CommunicationException;
+
     Boolean setTxFee(BigDecimal txFee) throws BitcoindException, CommunicationException;
 
     String signMessage(String address, String message) throws BitcoindException,

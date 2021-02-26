@@ -1101,6 +1101,19 @@ public class BtcdClientImpl implements BtcdClient {
 	}
 
 	@Override
+    public void generateToAddress(Integer nBlocks, String toAddress) throws BitcoindException, CommunicationException {
+		List<Object> params = CollectionUtils.asList(nBlocks, toAddress);
+    	rpcClient.execute(Commands.GENERATE_TO_ADDRESS.getName(), params);
+    }
+
+    @Override
+    public void generateToAddress(Integer nBlocks, String toAddress, Integer maxTries) throws BitcoindException,
+            CommunicationException {
+		List<Object> params = CollectionUtils.asList(nBlocks, toAddress, maxTries);
+    	rpcClient.execute(Commands.GENERATE_TO_ADDRESS.getName(), params);
+    }
+
+	@Override
 	public Boolean setTxFee(BigDecimal txFee) throws BitcoindException, CommunicationException {
 		txFee = txFee.setScale(Defaults.DECIMAL_SCALE, Defaults.ROUNDING_MODE);
 		String isSuccessJson = rpcClient.execute(Commands.SET_TX_FEE.getName(), txFee);
