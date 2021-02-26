@@ -24,6 +24,7 @@ public enum Commands {
 	ESTIMATE_FEE("estimatefee", 1, 1),
 	ESTIMATE_PRIORITY("estimatepriority", 1, 1),
 	GENERATE("generate", 1, 2),
+	GENERATE_TO_ADDRESS("generatetoaddress", 2, 3),
 	GET_ACCOUNT("getaccount", 1, 1),
 	GET_ACCOUNT_ADDRESS("getaccountaddress", 1, 1),
 	GET_ADDED_NODE_INFO("getaddednodeinfo", 1, 2),
