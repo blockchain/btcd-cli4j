@@ -168,6 +168,30 @@ public class BtcdClientImpl implements BtcdClient {
 	}
 
 	@Override
+	public String createWallet(String walletName) throws BitcoindException, CommunicationException {
+		List<Object> params = CollectionUtils.asList(walletName);
+		String walletJson = rpcClient.execute(Commands.CREATE_WALLET.getName(), params);
+		String wallet = rpcClient.getParser().parseString(walletJson);
+		return wallet;
+	}
+
+	@Override
+	public String createWallet(String walletName, Boolean disablePrivateKeys) throws BitcoindException, CommunicationException {
+		List<Object> params = CollectionUtils.asList(walletName, disablePrivateKeys);
+		String walletJson = rpcClient.execute(Commands.CREATE_WALLET.getName(), params);
+		String wallet = rpcClient.getParser().parseString(walletJson);
+		return wallet;
+	}
+
+	@Override
+	public String createWallet(String walletName, Boolean disablePrivateKeys, Boolean blank) throws BitcoindException, CommunicationException {
+		List<Object> params = CollectionUtils.asList(walletName, disablePrivateKeys, blank);
+		String walletJson = rpcClient.execute(Commands.CREATE_WALLET.getName(), params);
+		String wallet = rpcClient.getParser().parseString(walletJson);
+		return wallet;
+	}
+
+	@Override
 	public RawTransactionOverview decodeRawTransaction(String hexTransaction) 
 			throws BitcoindException, CommunicationException {
 		String rawTransactionJson = rpcClient.execute(Commands.DECODE_RAW_TRANSACTION.getName(), 

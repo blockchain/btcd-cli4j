@@ -37,6 +37,12 @@ public interface BtcdClient {
                                 int locktime,
                                 boolean replaceable) throws BitcoindException, CommunicationException;
 
+    String createWallet(String walletName) throws BitcoindException, CommunicationException;
+
+    String createWallet(String walletName, Boolean disablePrivateKeys) throws BitcoindException, CommunicationException;
+
+    String createWallet(String walletName, Boolean disablePrivateKeys, Boolean blank) throws BitcoindException, CommunicationException;
+
     RawTransactionOverview decodeRawTransaction(String hexTransaction) throws BitcoindException,
             CommunicationException;
 
