@@ -25,4 +25,5 @@ public class PubKeyScript extends SignatureScript {
 	private Integer reqSigs;
 	private ScriptTypes type;
 	private List<String> addresses;
+	private String address;
 }
