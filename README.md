@@ -1,6 +1,6 @@
-##Introduction
+## Introduction
 
-The btcd-cli4j library is a simple Java wrapper around Bitcoin Core's JSON-RPC (via HTTP) interface. 
+The btcd-cli4j library is a simple Java wrapper around Bitcoin Core's JSON-RPC (via HTTP) interface.
 
 * **Latest release:** 0.5.1 ([.zip](https://github.com/priiduneemre/btcd-cli4j/archive/0.5.1.zip); [.tar.gz](https://github.com/priiduneemre/btcd-cli4j/archive/0.5.1.tar.gz))
 * **Compatibility:** Bitcoin Core v0.10.0/0.10.1/0.10.2/0.10.3 (see [here](https://github.com/priiduneemre/btcd-cli4j/releases) for older versions)
@@ -15,7 +15,7 @@ btcd-cli4j follows a layered architecture in that the actions needed to communic
 By default, all incoming & outgoing decimal values (*i.e.* amounts, balances, ping times etc) are transformed into `BigDecimal`s with a scale of 8 and rounding mode of `RoundingMode.HALF_UP` by btcd-cli4j.
 
 
-##Technologies & dependencies
+## Technologies & dependencies
 
 The btcd-cli4j library has been designed for use with Java 7+, however it should also work fine with slightly older versions of the Java runtime (*i.e.* Java 6).
 
@@ -32,7 +32,7 @@ Other dependencies:
 * Apache Commons Lang 3.3.2 [[link]](http://commons.apache.org/proper/commons-lang/)
 
 
-##Getting started <a name="getting-started"></a>
+## Getting started <a name="getting-started"></a>
 
 Since the project is currently not hosted on the Maven Central Repository, you should begin by specifying the following custom repository in your `pom.xml` file:
 
@@ -61,7 +61,7 @@ In order to communicate with *bitcoind*, btcd-cli4j needs to be aware of your no
 	node.bitcoind.rpc.password = 3F4DN9QGqWrB4DCdfYMXp8xdDYL4HDFzpaS9r76DbNhw
 	node.bitcoind.http.auth_scheme = Basic
 
-Finally, to begin using the wrapper, create an instance of `CloseableHttpClient` (the default HTTP provider), load up the properties file created in the previous step and pass the two into a new `BtcdClientImpl` instance: 
+Finally, to begin using the wrapper, create an instance of `CloseableHttpClient` (the default HTTP provider), load up the properties file created in the previous step and pass the two into a new `BtcdClientImpl` instance:
 
 	PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
 	CloseableHttpClient httpProvider = HttpClients.custom().setConnectionManager(cm)
@@ -70,18 +70,18 @@ Finally, to begin using the wrapper, create an instance of `CloseableHttpClient`
 	InputStream is = new BufferedInputStream(new FileInputStream("node_config.properties"));
 	nodeConfig.load(is);
 	is.close();
-	
+
 	BtcdClient client = new BtcdClientImpl(httpProvider, nodeConfig);
-	
+
 That's it!
-	
+
 	MiningInfo miningInfo = client.getMiningInfo();
-	
-*P.S. To learn more about the default HTTP provider (e.g. performance tuning of* `CloseableHttpClient` *instances and/or use of SSL/TLS layering (i.e. HTTPS) (untested!)), see the official HttpComponents Client documentation* [here](http://hc.apache.org/httpcomponents-client-4.3.x/tutorial/html/connmgmt.html#d5e380) *and* [here](http://hc.apache.org/httpcomponents-client-4.3.x/tutorial/html/connmgmt.html#d5e436)*. Additionally, check out the related code samples:* [1](http://hc.apache.org/httpcomponents-client-4.3.x/httpclient/examples/org/apache/http/examples/client/ClientConfiguration.java) *and* [2](http://hc.apache.org/httpcomponents-client-4.3.x/httpclient/examples/org/apache/http/examples/client/ClientCustomSSL.java)*.* 
 
-##Handling asynchronous events
+*P.S. To learn more about the default HTTP provider (e.g. performance tuning of* `CloseableHttpClient` *instances and/or use of SSL/TLS layering (i.e. HTTPS) (untested!)), see the official HttpComponents Client documentation* [here](http://hc.apache.org/httpcomponents-client-4.3.x/tutorial/html/connmgmt.html#d5e380) *and* [here](http://hc.apache.org/httpcomponents-client-4.3.x/tutorial/html/connmgmt.html#d5e436)*. Additionally, check out the related code samples:* [1](http://hc.apache.org/httpcomponents-client-4.3.x/httpclient/examples/org/apache/http/examples/client/ClientConfiguration.java) *and* [2](http://hc.apache.org/httpcomponents-client-4.3.x/httpclient/examples/org/apache/http/examples/client/ClientCustomSSL.java)*.*
 
-Bitcoin Core also provides an asynchronous notification API by relying on a set of user-defined shell scripts specified in the `bitcoin.conf` configuration file (see [here](https://en.bitcoin.it/wiki/Running_Bitcoin#Bitcoin.conf_Configuration_File) for more details). Whenever a particular event is detected on the network, the appropriate shell script gets loaded with data & executed by *bitcoind*. To take advantage of this feature, add the following lines to your `bitcoin.conf` file (use any flavor of `netcat` you're comfortable with, such as `ncat` or `socat`): 
+## Handling asynchronous events
+
+Bitcoin Core also provides an asynchronous notification API by relying on a set of user-defined shell scripts specified in the `bitcoin.conf` configuration file (see [here](https://en.bitcoin.it/wiki/Running_Bitcoin#Bitcoin.conf_Configuration_File) for more details). Whenever a particular event is detected on the network, the appropriate shell script gets loaded with data & executed by *bitcoind*. To take advantage of this feature, add the following lines to your `bitcoin.conf` file (use any flavor of `netcat` you're comfortable with, such as `ncat` or `socat`):
 
 	alertnotify="echo %s | ncat 127.0.0.1 5158"
 	blocknotify="echo %s | ncat 127.0.0.1 5159"
@@ -106,7 +106,7 @@ Finally, instantiate the daemon with a preconfigured `BtcdClient` instance (see 
 	BtcdDaemon daemon = new BtcdDaemonImpl(client);
 
 Alternatively, create a self-contained version of the daemon (*i.e.* by specifying the affected ports only):
-	
+
 	BtcdDaemon daemon = new BtcdDaemonImpl(5158, 5159, 5160);
 
 Great! Now you're ready to add some event listeners:
@@ -117,15 +117,15 @@ Great! Now you're ready to add some event listeners:
 			System.out.printf("New block detected! (Event details: '%s')\n", block);
 		}
 	});
-	
-##Examples
 
-For a short list of usage examples (mostly just sample API calls), see the [examples](https://github.com/priiduneemre/btcd-cli4j/tree/master/examples/src/main) module. 
+## Examples
+
+For a short list of usage examples (mostly just sample API calls), see the [examples](https://github.com/priiduneemre/btcd-cli4j/tree/master/examples/src/main) module.
 
 Please note that some of the examples above will only work on the Bitcoin TESTNET3 chain (for obvious reasons).
 
 
-##Supporting the project
+## Supporting the project
 
 If btcd-cli4j has been useful to you and you feel like contributing, consider posting a [bug report](https://github.com/priiduneemre/btcd-cli4j/issues) or a [pull request](https://github.com/priiduneemre/btcd-cli4j/pulls). Alternatively, a spare beer or pizza would also be much appreciated:
 
