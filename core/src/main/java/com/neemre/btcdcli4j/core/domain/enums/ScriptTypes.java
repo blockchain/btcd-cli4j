@@ -26,7 +26,9 @@ public enum ScriptTypes {
 	WITNESS_V0_SCRIPTHASH("witness_v0_scripthash"),
 	WITNESS_UNKNOWN("witness_unknown"),
 	WITNESS_V1_TAPROOT("witness_v1_taproot"),
-	NONSTANDARD("nonstandard");
+	NONSTANDARD("nonstandard"),
+	LTC_WITNESS_MWEB_PEGIN("witness_mweb_pegin"),
+	LTC_WITNESS_MWEB("witness_mweb_hogaddr");
 
 	private final String name;
 
