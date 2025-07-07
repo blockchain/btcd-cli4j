@@ -1,6 +1,6 @@
 allprojects {
     group = 'com.blockchain.btcd-cli4j'
-    version = '0.5.8.15'
+    version = '0.5.8.16'
 }
 
 subprojects {
