@@ -1,0 +1,16 @@
+name: main pipeline
+
+on:
+  push:
+    branches:
+      - 'master'
+jobs:
+  test_libraries:
+    uses: blockchain/devx-workflows/.github/workflows/library-pipeline.yml@0.0.35
+    with:
+      version_script: scripts/version.sh
+      library_script: scripts/publish_lib.sh
+      build_docker_image: eu.gcr.io/blockchain-internal/build_common_jvm8-v2
+    secrets:
+      nexus_password: ${{ secrets.NEXUS_PASSWORD }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
