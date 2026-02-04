@@ -6,7 +6,7 @@ on:
 
 jobs:
   test_libraries:
-    uses: blockchain/devx-workflows/.github/workflows/library-pipeline.yml@0.0.35
+    uses: blockchain/devx-workflows/.github/workflows/library-pipeline.yml@v1
     with:
       version_script: scripts/version.sh
       library_script: scripts/publish_lib.sh
