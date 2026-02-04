@@ -29,7 +29,9 @@ public enum ScriptTypes {
 	WITNESS_V1_TAPROOT("witness_v1_taproot"),
 	NONSTANDARD("nonstandard"),
 	LTC_WITNESS_MWEB_PEGIN("witness_mweb_pegin"),
-	LTC_WITNESS_MWEB("witness_mweb_hogaddr");
+	LTC_WITNESS_MWEB("witness_mweb_hogaddr"),
+	// https://gitlab.com/bitcoin-cash-node/bitcoin-cash-node/-/blob/v29.0.0/src/script/standard.cpp?ref_type=tags#L36-37
+	BCH_SCRIPT("script");
 
 	private final String name;
 
